@@ -74,3 +74,5 @@ Link para o repositório https://github.com/hstreb/rinha-backend-2024-q1-vertx.g
   ![img.png](docs/execucao-jvm-1.png)
 - rodando com a versão nativa
   ![img.png](docs/execucao-native-1.png)
+- rodando versão 0.0.2 nativa, sem usar exceptions no tratamento do limite
+  ![img.png](docs/execucao-native-2.png)

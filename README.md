@@ -6,12 +6,12 @@ Link para o repositório https://github.com/hstreb/rinha-backend-2024-q1-vertx.g
 
 ## Tecnologias
 
-- java 21
-- vertx 4.5
-- PostgreSQL 16.2
-- nginx
+- linguagem java 21
+- web framework vertx 4.5.4
+- base de dados PostgreSQL 16.2
+- load balancer nginx
 
-## Construir
+## Construir imagem jvm
 
 - construir a aplicação:
 
@@ -22,7 +22,7 @@ Link para o repositório https://github.com/hstreb/rinha-backend-2024-q1-vertx.g
 - construir o imagem docker
 
     ````shell
-    docker build -t hstreb/rinha-2024-q1-vertx:0.0.1 .
+    docker build -t hstreb/rinha-2024-q1-vertx:0.0.1 -f Dockerfile.jvm .
     ````
 
 - publicar a imagem no docker hub
@@ -31,8 +31,46 @@ Link para o repositório https://github.com/hstreb/rinha-backend-2024-q1-vertx.g
     docker push hstreb/rinha-2024-q1-vertx:0.0.1
     ````
 
+## Construir imagem nativa
+
+> Observação: foi utilizado o [trace agent](https://www.graalvm.org/latest/reference-manual/native-image/metadata/AutomaticMetadataCollection/) com execução do teste da rinha, para gerar os metadados.
+> `java -agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image/ -jar build/libs/rinha-2024-q1-vertx-0.0.1-fat.jar`
+
+- construir a aplicação:
+
+    ```shell
+    ./gradlew nativeCompile
+    ```
+
+- construir o imagem docker
+
+    ````shell
+    docker build -t hstreb/rinha-2024-q1-vertx:0.0.1-native .
+    ````
+
+- publicar a imagem no docker hub
+
+    ````shell
+    docker push hstreb/rinha-2024-q1-vertx:0.0.1-native
+    ````
+
 ## Rodar
 
-```shell
-docker compose up -d
-```
+- versão jvm
+
+  ```shell
+  docker compose -f compose-jvm.yml up -d
+  ```
+
+- versão nativa
+
+  ```shell
+  docker compose up -d
+  ```
+
+## Resultados
+
+- rodando com a versão JVM
+  ![img.png](docs/execucao-jvm-1.png)
+- rodando com a versão nativa
+  ![img.png](docs/execucao-native-1.png)

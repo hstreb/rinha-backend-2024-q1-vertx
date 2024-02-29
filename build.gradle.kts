@@ -5,6 +5,7 @@ plugins {
   java
   application
   id("com.github.johnrengelman.shadow") version "8.1.1"
+  id("org.graalvm.buildtools.native") version "0.10.1"
 }
 
 group = "org.exemplo"

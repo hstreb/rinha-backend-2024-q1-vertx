@@ -1,7 +1,6 @@
 package org.exemplo.rinha2024q1.transacao;
 
 import io.vertx.core.Future;
-import io.vertx.pgclient.PgException;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
 

@@ -1,7 +1,6 @@
 package org.exemplo.rinha2024q1.transacao;
 
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.pgclient.PgException;
 
 import java.util.regex.Pattern;
 

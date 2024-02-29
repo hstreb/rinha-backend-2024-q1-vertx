@@ -17,7 +17,7 @@ CREATE UNLOGGED TABLE IF NOT EXISTS transacoes (
 CREATE INDEX idx_transacoes ON transacoes (cliente_id, realizada_em desc);
 
 CREATE OR REPLACE FUNCTION inserir_transcacao(cliente INTEGER, tipo CHAR(1), valor INTEGER, descricao VARCHAR(10))
-RETURNS TABLE(saldo_novo INTEGER, limite INTEGER) AS $$
+RETURNS TABLE(saldo_novo INTEGER, limite INTEGER, erro BOOLEAN) AS $$
 DECLARE
   saldo_atual INTEGER;
   limite INTEGER;
@@ -27,18 +27,19 @@ BEGIN
 
     IF tipo = 'd' THEN
         saldo_novo := saldo_atual - valor;
-        IF saldo_novo + limite < 0 THEN
-            RAISE EXCEPTION 'Limite excedido' USING ERRCODE = 'P0000';
-        END IF;
     ELSE
         saldo_novo := saldo_atual + valor;
     END IF;
 
-    UPDATE clientes SET saldo = saldo_novo WHERE id = cliente;
+    IF saldo_novo + limite >= 0 THEN
+        UPDATE clientes SET saldo = saldo_novo WHERE id = cliente;
 
-    INSERT INTO transacoes (cliente_id, tipo, valor, descricao) VALUES (cliente, tipo, valor, descricao);
+        INSERT INTO transacoes (cliente_id, tipo, valor, descricao) VALUES (cliente, tipo, valor, descricao);
 
-    RETURN QUERY SELECT saldo_novo, limite;
+        RETURN QUERY SELECT saldo_novo, limite, false;
+    ELSE
+        RETURN QUERY SELECT 0, 0, true;
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 

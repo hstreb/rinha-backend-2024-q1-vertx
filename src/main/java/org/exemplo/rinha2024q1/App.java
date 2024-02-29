@@ -38,9 +38,21 @@ public class App extends AbstractVerticle {
     private final int httpPort = Integer.parseInt(System.getenv().getOrDefault("HTTP_PORT", "8080"));
     private final int poolMaxSize = Integer.parseInt(System.getenv().getOrDefault("POOL_MAX_SIZE", "4"));
 
-    public static void main(String[] args) {
-        var vertx = Vertx.vertx();
-        vertx.deployVerticle(App::new, new DeploymentOptions().setInstances(INSTANCIAS));
+    private SqlClient getSqlClient() {
+        var connectOptions = new PgConnectOptions()
+                .setPort(5432)
+                .setHost(System.getenv().getOrDefault("DB_HOST", "localhost"))
+                .setDatabase(System.getenv().getOrDefault("DB_NAME", "rinha"))
+                .setUser(System.getenv().getOrDefault("DB_USER", "rinha"))
+                .setPassword(System.getenv().getOrDefault("DB_PASSWORD", "rinha123"));
+        var poolOptions = new PoolOptions()
+                .setMaxSize(poolMaxSize);
+        return PgBuilder
+                .client()
+                .with(poolOptions)
+                .connectingTo(connectOptions)
+                .using(vertx)
+                .build();
     }
 
     private static ExtratoHandler getExtratoHandler(SqlClient sqlClient) {
@@ -51,6 +63,11 @@ public class App extends AbstractVerticle {
     private static TransacaoHandler getTransacaoHandler(SqlClient sqlClient) {
         var transacaoRepository = new TransacaoRepository(sqlClient);
         return new TransacaoHandler(transacaoRepository);
+    }
+
+    public static void main(String[] args) {
+        var vertx = Vertx.vertx();
+        vertx.deployVerticle(App::new, new DeploymentOptions().setInstances(INSTANCIAS));
     }
 
     @Override
@@ -78,22 +95,5 @@ public class App extends AbstractVerticle {
                     LOGGER.error("Aplicacao falhou ao iniciar", failure);
                     start.fail(failure);
                 });
-    }
-
-    private SqlClient getSqlClient() {
-        var connectOptions = new PgConnectOptions()
-                .setPort(5432)
-                .setHost(System.getenv().getOrDefault("DB_HOST", "localhost"))
-                .setDatabase(System.getenv().getOrDefault("DB_NAME", "rinha"))
-                .setUser(System.getenv().getOrDefault("DB_USER", "rinha"))
-                .setPassword(System.getenv().getOrDefault("DB_PASSWORD", "rinha123"));
-        var poolOptions = new PoolOptions()
-                .setMaxSize(poolMaxSize);
-        return PgBuilder
-                .client()
-                .with(poolOptions)
-                .connectingTo(connectOptions)
-                .using(vertx)
-                .build();
     }
 }

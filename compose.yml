@@ -2,7 +2,7 @@ version: "3.8"
 name: rinha-2024-q1-vertx
 services:
   api1: &api
-    image: hstreb/rinha-2024-q1-vertx:0.0.1-native
+    image: hstreb/rinha-2024-q1-vertx:0.0.2-native
     depends_on:
       db:
         condition: service_healthy

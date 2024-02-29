@@ -32,14 +32,14 @@ public class TransacaoHandler {
         }
         var transacao = new Transacao(cliente, novaTransacao.valorLong(), novaTransacao.tipo(), novaTransacao.descricao());
         repository.criar(transacao)
-                .onSuccess(saldo -> context.response().putHeader(CONTENT_TYPE, APPLICATION_JSON).end(encode(saldo)))
-                .onFailure(ex -> {
-                    if (ex instanceof PgException pgEx && pgEx.getSqlState().equals("P0000")) {
+                .onSuccess(saldo -> {
+                    if (saldo.isEmpty()) {
                         context.response().setStatusCode(422).end();
                     } else {
-                        context.response().setStatusCode(500).end();
+                        context.response().putHeader(CONTENT_TYPE, APPLICATION_JSON).end(encode(saldo.get()));
                     }
-                });
+                })
+                .onFailure(ex -> context.response().setStatusCode(500).end());
     }
 
     private boolean verificarParametros(Long cliente, NovaTransacao transacao) {

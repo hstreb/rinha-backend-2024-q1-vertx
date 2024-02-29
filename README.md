@@ -22,13 +22,13 @@ Link para o repositório https://github.com/hstreb/rinha-backend-2024-q1-vertx.g
 - construir o imagem docker
 
     ````shell
-    docker build -t hstreb/rinha-2024-q1-vertx:0.0.1 -f Dockerfile.jvm .
+    docker build -t hstreb/rinha-2024-q1-vertx:0.0.2 -f Dockerfile.jvm .
     ````
 
 - publicar a imagem no docker hub
 
     ````shell
-    docker push hstreb/rinha-2024-q1-vertx:0.0.1
+    docker push hstreb/rinha-2024-q1-vertx:0.0.2
     ````
 
 ## Construir imagem nativa
@@ -45,13 +45,13 @@ Link para o repositório https://github.com/hstreb/rinha-backend-2024-q1-vertx.g
 - construir o imagem docker
 
     ````shell
-    docker build -t hstreb/rinha-2024-q1-vertx:0.0.1-native .
+    docker build -t hstreb/rinha-2024-q1-vertx:0.0.2-native .
     ````
 
 - publicar a imagem no docker hub
 
     ````shell
-    docker push hstreb/rinha-2024-q1-vertx:0.0.1-native
+    docker push hstreb/rinha-2024-q1-vertx:0.0.2-native
     ````
 
 ## Rodar
